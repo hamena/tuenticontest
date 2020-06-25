@@ -96,13 +96,23 @@ size_t calculate_rec(size_t N, const NumberList& wl, NumberList& candidate,
 	    return it->second;
 	} else {
 	    size_t acum = 0;
-	    for (auto n : wl) {
-		if (n <= candidate.back() && (value+n) <= N) {
-		    candidate.push_back(n);
-		    acum += calculate_rec(N, wl, candidate, mem);
-		    candidate.pop_back();
-		}
-	    }
+	    for_each(wl.begin(), wl.end(),
+		     [N, &wl, &candidate, &mem, value, &acum] (size_t n) {
+			 if (n <= candidate.back() && (value+n) <= N) {
+			     candidate.push_back(n);
+			     acum += calculate_rec(N, wl, candidate, mem);
+			     candidate.pop_back();
+			 }
+		     });
+            /*
+            for (auto n : wl) {
+                if (n <= candidate.back() && (value+n) <= N) {
+                    candidate.push_back(n);
+                    acum += calculate_rec(N, wl, candidate, mem);
+                    candidate.pop_back();
+                }
+            }
+	    */
 	    mem.insert(make_pair(mark, acum));
 	    return acum;
 	}
